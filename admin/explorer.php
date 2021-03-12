@@ -24,7 +24,8 @@ if ($checkUrl == 1) {
     header('location: /admin/index.php');
 }
 
-$dir = $_GET['dir'] ?? realpath('.\\');
+$dir = $_GET['dir'] ?? '.\\';
+$dir = realpath($dir);
 chdir($dir);
 $curDir = getcwd();
 $arHere = scandir($curDir);
