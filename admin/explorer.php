@@ -1,9 +1,24 @@
 <?php
-function prent ($arr) {
-    echo '<pre>';
-    var_dump($arr);
-    echo '</pre>';
+function removeDir ($path) {
+    $dd = opendir($path);
+    while (($item = readdir($dd)) !== false) {
+        if($item == '.' || $item == '..') {
+            continue;
+        }
+
+        $item = $path . '\\' . $item;
+
+        if (is_dir($item)) {
+            removeDir($item);
+        } else {
+            unlink($item);
+        }
+    }
+    rmdir($path);
+
 }
+
+
 $checkUrl = preg_match('/\/explorer\.php$/',$_SERVER['PHP_SELF']);
 if ($checkUrl == 1) {
     header('location: /admin/index.php');
@@ -25,7 +40,7 @@ if ($fileToRename = $_GET['rename'] ?? false) {
         header("location: /admin/?dir={$dir}");
     else : ?>
         <form action="/admin/?dir=<?= $dir; ?>&rename=<?= $_GET['rename']; ?>" method="POST">
-            <input type="text" name="newName" placeholder="new name">
+            <label>Новое имя<input type="text" name="newName" placeholder="new name"></label>
             <button>OK</button>
         </form>
     <?php endif;
@@ -36,8 +51,10 @@ if (($fileToRemove = $_GET['remove'] ?? false) && ($type = $_GET['type'] ?? fals
     if (file_exists($fileToRemove)) {
         if ($type == 'file') {
             unlink($fileToRemove);
+            header("location: $dir");
         } elseif ($type == 'dir') {
-            rmdir($fileToRemove);
+            removeDir($fileToRemove);
+            header("location: $dir");
         }
     }
 }
@@ -71,6 +88,7 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 <ul>
@@ -79,10 +97,10 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
         if (is_dir($dir . '\\' . $path)) : ?>
 
             <li>
-                <a href="/admin/?dir=<?= $dir . '\\'.$path; ?>"><?= $path; ?></a>
+                <a href="/admin/?dir=<?= $dir . '\\'.$path; ?>"><?= ($path == '..') ? 'Назад' : $path; ?></a>
                 <?php if ($path != '..') :?>
-                <a href="/admin/?dir=<?= $dir; ?>&remove=<?= $path;?>&type=dir">Удалить</a>
-                <a href="/admin/?dir=<?= $dir; ?>&rename=<?= $path;?>">Переименовать</a>
+                <a href="/admin/?dir=<?= $dir; ?>&remove=<?= $path;?>&type=dir" class="button">Удалить</a>
+                <a href="/admin/?dir=<?= $dir; ?>&rename=<?= $path;?>" class="button">Переименовать</a>
                 <?php endif; ?>
             </li>
 
@@ -90,8 +108,8 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
 
             <li>
                 <?= $path; ?>
-                <a href="/admin/?dir=<?= $dir; ?>&remove=<?= $path;?>&type=file">Удалить</a>
-                <a href="/admin/?dir=<?= $dir; ?>&rename=<?= $path;?>">Переименовать</a>
+                <a href="/admin/?dir=<?= $dir; ?>&remove=<?= $path;?>&type=file" class="button">Удалить</a>
+                <a href="/admin/?dir=<?= $dir; ?>&rename=<?= $path;?>" class="button">Переименовать</a>
             </li>
 
         <?php endif;
@@ -99,16 +117,14 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
             <li><a href="/admin/">Вернуться в исходное положение</a></li>
     </ul>
 
-
-<?php } ?>
-
 <form action="/admin/?dir=<?= $dir; ?>" method="post">
-    <input type="text" name="newFile"placeholder="Имя нового файла">
-    <input type="radio" name="type" value="file">Файл
-    <input type="radio" name="type" value="dir">Директория
+    <label>Имя нового создаваемого элемента<input type="text" name="newFile" placeholder="Имя нового файла"></label>
+    <label>Файл<input type="radio" name="type" value="file"></label>
+    <label>Директория<input type="radio" name="type" value="dir"></label>
     <button>CREATE</button>
 </form>
 
+<?php } ?>
 
 </body>
 </html>
