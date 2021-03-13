@@ -110,15 +110,13 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
         if (is_dir($dir . '\\' . $path)) : ?>
 
             <li>
-            <? if($path == '..'):?>
+            <?php if($path == '..'):?>
                 <a href="/admin/?dir=<?= realpath($dir . '/..'); ?>">Назад</a>
-            <? else:?>
+            <?php else: ?>
                 <a href="/admin/?dir=<?= $dir . '\\'.$path; ?>"><?= $path; ?></a>
-            <? endif;?>
-                <?php if ($path != '..') :?>
                 <a href="/admin/?dir=<?= $dir; ?>&remove=<?= $path;?>&type=dir" class="button">Удалить</a>
                 <a href="/admin/?dir=<?= $dir; ?>&rename=<?= $path;?>" class="button">Переименовать</a>
-                <?php endif; ?>
+            <?php endif; ?>
             </li>
 
         <?php else: ?>
