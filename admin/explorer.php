@@ -18,8 +18,9 @@ function removeDir ($path) {
 
 }
 
+$formats = 'php|html|txt|css';
 
-$checkUrl = preg_match('/\/explorer\.php$/',$_SERVER['PHP_SELF']);
+$checkUrl = preg_match('/\/explorer\.php$/', $_SERVER['PHP_SELF']);
 if ($checkUrl == 1) {
     header('location: /admin/index.php');
 }
@@ -35,7 +36,7 @@ $arHere = scandir($curDir);
 if ($fileToRename = $_GET['rename'] ?? false) {
     $fileToRename = $dir . '\\'.$fileToRename;
     if ($newName = $_POST['newName'] ?? false) :
-        if (preg_match('/^[-a-zA-Zа-яА-ЯёЁ0-9 _]+\.?[-a-zA-Zа-яА-ЯёЁ0-9 _]+$/ui',$_POST['newName'])) {
+        if (preg_match('/^[-a-zA-Zа-яА-ЯёЁ0-9 _]+(\.('.$formats.'))?$/ui',$_POST['newName'])) {
             rename($fileToRename, $dir . '\\' . $_POST['newName']);
         }
         header("location: /admin/?dir={$dir}");
@@ -61,7 +62,7 @@ if (($fileToRemove = $_GET['remove'] ?? false) && ($type = $_GET['type'] ?? fals
 }
 
 if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)) {
-    if (preg_match('/^[-a-zA-Zа-яА-ЯёЁ0-9 _]+\.?[-a-zA-Zа-яА-ЯёЁ0-9 _]+$/ui',$newFile)) {
+    if (preg_match('/^[-a-zA-Zа-яА-ЯёЁ0-9 _]+(\.('. $formats .'))?$/ui',$newFile)) {
         $newFile = $dir . '\\' . $newFile;
         if ($type == 'dir') {
             while (file_exists($newFile)) {
@@ -92,7 +93,7 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
 ?>
 
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -109,7 +110,11 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
         if (is_dir($dir . '\\' . $path)) : ?>
 
             <li>
-                <a href="/admin/?dir=<?= $dir . '\\'.$path; ?>"><?= ($path == '..') ? 'Назад' : $path; ?></a>
+            <? if($path == '..'):?>
+                <a href="/admin/?dir=<?= realpath($dir . '/..'); ?>">Назад</a>
+            <? else:?>
+                <a href="/admin/?dir=<?= $dir . '\\'.$path; ?>"><?= $path; ?></a>
+            <? endif;?>
                 <?php if ($path != '..') :?>
                 <a href="/admin/?dir=<?= $dir; ?>&remove=<?= $path;?>&type=dir" class="button">Удалить</a>
                 <a href="/admin/?dir=<?= $dir; ?>&rename=<?= $path;?>" class="button">Переименовать</a>
@@ -140,7 +145,6 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
 
 </body>
 </html>
-
 
 
 
