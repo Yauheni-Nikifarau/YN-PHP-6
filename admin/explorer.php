@@ -64,9 +64,20 @@ if (($newFile = $_POST['newFile'] ?? false) && ($type = $_POST['type'] ?? false)
     if (preg_match('/^[-a-zA-Zа-яА-ЯёЁ0-9 _]+\.?[-a-zA-Zа-яА-ЯёЁ0-9 _]+$/ui',$newFile)) {
         $newFile = $dir . '\\' . $newFile;
         if ($type == 'dir') {
+            while (file_exists($newFile)) {
+                $newFile .= '_копия';
+            }
             mkdir($newFile);
             header("location: /admin/?dir={$dir}");
         } elseif ($type == 'file') {
+            while (file_exists($newFile)) {
+                $index = strripos($newFile, '.');
+                if ($index !== false) {
+                    $newFile = substr($newFile, 0, $index) . '_копия' . substr($newFile, $index);
+                } else {
+                    $newFile .= '_копия';
+                }
+            }
             $fb = fopen($newFile, "w");
             fclose($fb);
             header("location: /admin/?dir={$dir}");
