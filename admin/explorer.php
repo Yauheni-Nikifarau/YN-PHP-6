@@ -52,10 +52,10 @@ if (($fileToRemove = $_GET['remove'] ?? false) && ($type = $_GET['type'] ?? fals
     if (file_exists($fileToRemove)) {
         if ($type == 'file') {
             unlink($fileToRemove);
-            header("location: $dir");
+            header("location: /admin/?dir=$dir");
         } elseif ($type == 'dir') {
             removeDir($fileToRemove);
-            header("location: $dir");
+            header("location: /admin/?dir=$dir");
         }
     }
 }
