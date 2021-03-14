@@ -3,8 +3,13 @@
     padding: 0;
 }
 
+.site {
+    width: 100%;
+    min-width: 960px;
+}
+
 li {
-    width: 40%;
+    width: 70%;
     margin: 0 auto;
     border: 2px solid grey;
     display: flex;
@@ -23,19 +28,23 @@ li {
     line-height: 20px;
 }
 
-.button:nth-last-child(1) {
-    margin-left: 50px;
-    background-color: indigo;
+.rename {
+    background-color: #330158;
 }
 
-.button:nth-last-child(2) {
+.del {
+    background-color: #580202;
     margin-left: auto;
-    background-color: darkred;
 }
+
+.edit {
+    background-color: #005600;
+}
+
+
 
 form {
     width: 400px;
-    height: 300px;
     padding: 30px;
     border: 5px solid black;
     border-radius: 30px;
@@ -50,9 +59,25 @@ form input {
 }
 
 form button {
-    width: 200px;
+    margin: 15px auto;
+    display: block;
     height: 50px;
     font-size: 24px;
     color: white;
     background-color: darkblue;
+}
+
+.editForm {
+    width: 90%;
+}
+
+.editForm textarea {
+    resize: none;
+    width: 85%;
+    min-height: 600px;
+}
+
+.forms {
+    display: flex;
+    justify-content: space-between;
 }
