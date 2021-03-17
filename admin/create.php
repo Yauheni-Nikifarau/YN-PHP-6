@@ -5,16 +5,18 @@ $type = $_GET['type'] ?? false;
 $extension = $_POST['extension'] ?? false;
 $formats = 'js|html|txt|css';
 if ($newFile !== false && $type !== false && $dir !== false) {
-        if ($type == 'dir') {
+
+        if ($type == 'dir') {            
             if (preg_match('/^[-a-zA-Z0-9_]+$/ui', $newFile)) {
                 $newFile = $dir . '\\' . $newFile;
                 while (file_exists($newFile)) {
                     $newFile .= '_копия';
                 }
+                echo $newFile;
                 mkdir($newFile);
-                header("location: /admin/?dir={$dir}");
+               header("location: /admin/?dir={$dir}");
             } else {
-                header("location: /admin/?dir={$dir}");
+               header("location: /admin/?dir={$dir}");
             }
         } elseif ($type == 'file' && $extension !== false) {
             $newFile = $newFile . '.' . $extension;
@@ -30,15 +32,15 @@ if ($newFile !== false && $type !== false && $dir !== false) {
                 }
                 $fb = fopen($newFile, "w");
                 fclose($fb);
-                header("location: /admin/?dir={$dir}");
+              header("location: /admin/?dir={$dir}");
             } else {
-                header("location: /admin/?dir={$dir}");
+               header("location: /admin/?dir={$dir}");
             }
         } else {
-            header("location: /admin/?dir=$dir");
+           header("location: /admin/?dir=$dir");
         }
 } elseif ($dir !== false) {
-    header("location: /admin/?dir=$dir");
+   header("location: /admin/?dir=$dir");
 } else {
-    header("location: /admin/");
+   header("location: /admin/");
 }
