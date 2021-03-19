@@ -81,3 +81,25 @@ form button {
     display: flex;
     justify-content: space-between;
 }
+
+.login-form {
+    width: 300px;
+    height: 200px;
+    margin: 50px auto;
+}
+
+.login-form input, .login-form button {
+    display: block;
+    width: 80%;
+    margin: 15px auto;
+    font-size: 20px;
+}
+
+.exit {
+    width: 80px;
+    display: block;
+    padding: 10px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
